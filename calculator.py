@@ -22,18 +22,22 @@ while user_in != "":
         items.append(user_in.split("，"))
     user_in = input()
 
-if platform.system() != "Windows":
-    os.system("clear")
-else:
-    os.system("cls")
 
 table = PrettyTable()
 table.title = '消费项目清单'
 table.field_names = ["消费项目", "支出(¥)"]
 for item in items:
     table.add_row(item)
-    total_money += int(item[1])
+    total_money += float(item[1])
+
+if platform.system() != "Windows":
+    os.system("clear")
+else:
+    os.system("cls")
 print(table)
+with open("output.txt", 'w') as fd:
+    fd.write(table.get_string()+'\n\n')
+
 
 table = PrettyTable()
 table.title = "汇总"
@@ -42,3 +46,6 @@ ra = list(map(int, input("请输入分款比例(e.g. 4:6): ").split(":")))
 a_pay = round(total_money*(ra[0]/(ra[0]+ra[1])), 2)
 table.add_row([total_money, a_pay, round(total_money-a_pay, 2)])
 print(table)
+with open("output.txt", 'a+') as fd:
+    fd.write(table.get_string()+'\n\n')
+    fd.write(f"分款比例为{ra[0]}:{ra[1]}")
